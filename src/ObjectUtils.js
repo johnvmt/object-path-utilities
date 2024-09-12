@@ -154,11 +154,13 @@ function objectSet(object, objectPath, value, options = {}) {
         return value;
     else { // setting part of object
         const objectKey = pathParts[0];
+
         if(pathParts.length === 1)
             object[objectKey] = value;
         else {
             if(typeof object[objectKey] !== "object" || object[objectKey] === null) {
-                object[objectKey] = (options.array && (typeof objectKey === "number" || (typeof objectKey === "string" && /^\d+$/.test(objectKey))))
+                const childObjectKey = pathParts[1];
+                object[objectKey] = (options.array && (typeof childObjectKey === "number" || (typeof childObjectKey === "string" && /^\d+$/.test(childObjectKey))))
                     ? []
                     : {};
             }
@@ -177,7 +179,8 @@ function objectSetImmutable(object, objectPath, value, options = {}) {
     else { // setting part of object
         const objectKey = pathParts[0];
         if(typeof object !== "object" || object === null) { // create it
-            if((options.array && (typeof objectKey === "number" || (typeof objectKey === "string" && /^\d+$/.test(objectKey)))))
+            const childObjectKey = pathParts[1];
+            if((options.array && (typeof childObjectKey === "number" || (typeof childObjectKey === "string" && /^\d+$/.test(childObjectKey)))))
                 object = [];
             else
                 object = {};
