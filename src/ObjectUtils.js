@@ -1,4 +1,3 @@
-// Object Utils v1.0.16
 const defaultOptions = {
     separator: "/",
     parent: "..",
@@ -167,6 +166,26 @@ function objectSet(object, objectPath, value, options = {}) {
 
             objectSet(object[objectKey], pathParts.slice(1), value, options);
         }
+        return object;
+    }
+}
+
+function objectCreatePath(object, objectPath, options = {}) {
+    const pathParts = pathPartsFromPath(objectPath, options.separator);
+
+    if(pathParts.length === 0) // setting whole object, cannot set in place
+        return object;
+    else { // setting part of object
+        const objectKey = pathParts[0];
+
+        if(typeof object[objectKey] !== 'object' || object[objectKey] === null) {
+            object[objectKey] = (options.array && (typeof objectKey === 'number' || (typeof objectKey === 'string' && /^\d+$/.test(objectKey))))
+                ? []
+                : {};
+        }
+
+        objectCreatePath(object[objectKey], pathParts.slice(1), options);
+
         return object;
     }
 }
@@ -394,6 +413,7 @@ export {
     objectClone,
     objectDiffs,
     indexArrayBy,
+    objectCreatePath,
     objectDeepEqual,
     objectDelete,
     objectHas,
@@ -420,6 +440,7 @@ export default {
     objectClone,
     objectDiffs,
     indexArrayBy,
+    objectCreatePath,
     objectDeepEqual,
     objectDelete,
     objectHas,
